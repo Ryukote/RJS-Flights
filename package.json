@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
+    "qs": "^6.7.0",
     "react": "^16.8.6",
     "react-datepicker": "^2.8.0",
     "react-dom": "^16.8.6",
@@ -14,7 +15,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts cp ./endpoints.env .env && build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
