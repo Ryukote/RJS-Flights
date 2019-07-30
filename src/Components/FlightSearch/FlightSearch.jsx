@@ -1,59 +1,46 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import AsyncSelect from 'react-select/async';
 import { authenticate, getIATACode } from '../../Utilities/AmadeusAPI';
+import { OriginContext } from '../Contexts/OriginContext';
+import { originPlaceholder } from '../../Constants/flightSearchConstants';
 
-class FlightSearch extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            suggestions: [],
-            originText: ""
+const FlightSearch = () => {
+    useEffect(() => {
+        async function storeAccessToken() {
+            sessionStorage.setItem("amadeus-token", await authenticate());
         }
 
-        this.originSelected = this.originSelected.bind(this);
-        this.getIATASuggestions = this.getIATASuggestions.bind(this);
-    }
+        storeAccessToken();
+    }, []);
 
-    async componentDidMount() {
-        await authenticate();
-    }
-
-    getIATASuggestions = async () => {
-        return await getIATACode(this.state.originText)
+    const [originText, originSearch] = useContext(OriginContext);
+    
+    const [suggestions, setSuggestions] = useState([]);
+    const getIATASuggestions = async () => {
+        return await getIATACode(originText)
             .then(result => {
-                this.setState({
-                    suggestions: result
-                });
-
-                return this.state.suggestions;
+                console.log(originText)
+                setSuggestions(result);
+                return suggestions;
             })
             .catch(error => {
                 throw error;
             });
     }
 
-    originSelected = (inputText) => {
-        this.setState({
-            originText: inputText
-        });
-    }
-
-    render() {
-        return(
-            <div id="flightSearch">
-                <div id="originIATA">
-                    <AsyncSelect
-                        placeholder="Enter departure city..."
-                        options={this.state.suggestions}
-                        loadOptions={this.getIATASuggestions}
-                        onInputChange={(e) => this.originSelected(e)}
-                        isClearable={true}
-                    />
-                </div>
+    return(
+        <div id="flightSearch">
+            <div id="originIATA">
+                <AsyncSelect
+                    placeholder={originPlaceholder}
+                    options={suggestions}
+                    loadOptions={async() => await getIATASuggestions()}
+                    onInputChange={(e) => originSearch(e)}
+                    isClearable={true}
+                />
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default FlightSearch;
