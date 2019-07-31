@@ -22,7 +22,7 @@ export const authenticate = async function() {
         body,
         config
     );
-
+    
     return response.data.access_token;
 }
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css';
-import { OriginProvider } from './Components/Contexts/OriginContext';
+import { FlightProvider } from './Components/Contexts/FlightContext';
 import FlightSearch from './Components/FlightSearch/FlightSearch';
 
 function App() {
   return (
-    <OriginProvider>
+    <FlightProvider>
       <FlightSearch/>
-    </OriginProvider>
+    </FlightProvider>
   );
 }
 
