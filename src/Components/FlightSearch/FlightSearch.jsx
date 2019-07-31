@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import AsyncSelect from 'react-select/async';
 import DayPicker from 'react-day-picker/DayPickerInput';
 import { Container, Row, Col } from 'reactstrap';
+import moment from 'moment';
 
 import { authenticate, getIATACode } from '../../Utilities/AmadeusAPI';
 
@@ -42,19 +43,24 @@ const FlightSearch = () => {
     useEffect(() => {
         let result = new Date();
         result = departureDate;
-        let replaced = result
-            .toISOString()
-            .split('T')[0];
-        setTmpDepartureDate(replaced);
+        
+        if(moment(result, 'yyyy-MM-dd', true).isValid()) {
+            let replaced = result
+                .toISOString()
+                .split('T')[0];
+            setTmpDepartureDate(replaced);
+        }
     },[departureDate, tmpDepartureDate])
 
     useEffect(() => {
         let result = new Date();
         result = destinationDate;
-        let replaced = result
-            .toISOString()
-            .split('T')[0];
-            setTmpDestinationDate(replaced);
+        if(moment(result, 'yyyy-MM-dd', true).isValid()) {
+            let replaced = result
+                .toISOString()
+                .split('T')[0];
+                setTmpDestinationDate(replaced);
+        }
     },[destinationDate, tmpDestinationDate])
     
     const [departureSuggestions, setDepartureSuggestions] = useState([]);
