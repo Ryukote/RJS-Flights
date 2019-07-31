@@ -1,0 +1,46 @@
+.selectStyle {
+    width: 250px;
+}
+
+.dateStyle {
+    border-left: 0px !important;
+    border-right: 0px !important;
+    border-top: 0px !important;
+    border-color: blue !important;
+}
+
+.departure {
+    width: 100%;
+    text-align: center !important;
+}
+
+#flightSearch {
+    
+}
+
+#departureIATA {
+    display: inline-block;
+}
+
+.connected {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#flightHeader {
+    width: 100%;
+    background-color: azure;
+}
+
+.columnStyle {
+    width: 50%;
+}
+
+.leftColumnStyle {
+    text-align: center;
+}
+
+.formatComponents {
+    margin-top: 15px;
+}

@@ -1,24 +1,29 @@
 import axios from 'axios';
 import qs from 'qs';
+require('dotenv').config();
 
-export const authenticate = async () => {
+export const authenticate = async function() {
     const config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
     }
 
-    await axios.post(`${process.env.REACT_APP_AUTHENTICATE_URL}`, qs.stringify({
+    const body = qs.stringify({
         "grant_type": "client_credentials",
         "client_id": process.env.REACT_APP_KEY,
         "client_secret": process.env.REACT_APP_SECRET
-    }), config)
-        .then(response => {
-            sessionStorage.setItem("amadeus-token", response.data.access_token);
-        })
-        .catch(error => {
-            throw error;
-        });
+    });
+
+    let response = '';
+
+    response = await axios.post(
+        process.env.REACT_APP_AUTHENTICATE_URL,
+        body,
+        config
+    );
+    
+    return response.data.access_token;
 }
 
 export const getIATACode = async (city) => {
@@ -33,24 +38,11 @@ export const getIATACode = async (city) => {
             tmpResult.forEach((value) => {
                 if(value.iata !== '') {
                     data.push({
-                        label: value.name + ", " + value.country + " (" + value.iata + ")",
+                        label: `${value.name}, ${value.country} (${value.iata})`,
                         value: value.iata                        
                     });
                 }
             })
-
-            console.log(data);
-
-            // Object(tmpResult).map((value){
-            //     if(value.iata !== '') {
-            //         data.push({
-            //             value: value.iata,
-            //             label: value.name + ", " + value.country + " (" + value.iata + ")"
-            //         });
-
-            //         i++;
-            //     }
-            // })
 
             return data;
         })
