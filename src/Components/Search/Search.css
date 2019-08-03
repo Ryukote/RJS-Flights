@@ -1,0 +1,12 @@
+.full {
+    width: 100vw;
+    /* margin-top: 10px; */
+}
+
+.centerButton {
+    width: inherit !important;
+    /* text-align: center !important; */
+    /* display: inline-block !important; */
+    margin-top: 100px !important;
+    /* margin: 0 auto; */
+}

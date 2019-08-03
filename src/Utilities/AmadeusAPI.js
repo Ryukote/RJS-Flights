@@ -1,5 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
+import { numberOfFlights } from '../Constants/flightSearchConstants';
+import moment from 'moment';
 require('dotenv').config();
 
 export const authenticate = async function() {
@@ -46,4 +48,52 @@ export const getIATACode = async (city) => {
 
             return data;
         })
+}
+
+export const getFlightOffer = async (data) => {
+    console.log(data);
+    let url = `${process.env.REACT_APP_OFFERS}?`
+        + `origin=${data.originIATA}&`
+        + `destination=${data.destinationIATA}&`
+        + `departureDate=${data.departureDateText}`;
+
+    console.log("Departure date:" + data.departureDateText);
+
+    (moment(data.destinationDateText, "yyyy-MM-dd", true).isValid()) 
+        ? url += `&returnDate=${data.destinationDateText}`
+        : url += '';
+
+    (data.adults > 1) 
+        ? url += `&adults=${data.adults}` 
+        : url += '';
+    
+    (data.children > 0) 
+        ? url += `&children=${data.children}` 
+        : url += '';
+
+    (data.infants > 0) 
+        ? url += `&infants=${data.infants}` 
+        : url += '';
+
+    (data.seniors > 0) 
+        ? url += `&seniors=${data.seniors}` 
+        : url += '';
+
+    (data.travelClass !== '') 
+        ? url += `&travelClass=${data.travelClass}` 
+        : url += '';
+
+    url += `&max=${numberOfFlights}`;
+
+    let headers = {
+        "Authorization": `Bearer ${sessionStorage.getItem("amadeus-token")}`
+    }
+    
+    let response = await axios.get(
+        url, {
+            headers: headers
+        }
+    )
+    console.log(response.data);
+    return response.data;
 }

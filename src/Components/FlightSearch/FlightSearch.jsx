@@ -3,6 +3,7 @@ import AsyncSelect from 'react-select/async';
 import DayPicker from 'react-day-picker/DayPickerInput';
 import { Container, Row, Col } from 'reactstrap';
 import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { authenticate, getIATACode } from '../../Utilities/AmadeusAPI';
 
@@ -25,12 +26,16 @@ const FlightSearch = () => {
     const [
         [originText, originSearch],
         [destinationText, destinationSearch],
+        [originIATA, setOriginIATA],
+        [destinationIATA, setDestinationIATA],
         [destinationDate, setDestinationDate],
-        [departureDate, setDepartureDate]
+        [departureDate, setDepartureDate],
+        [departureDateText, setDepartureDateText],
+        [destinationDateText, setDestinationDateText]
     ] = useContext(FlightContext);
 
-    const [tmpDepartureDate, setTmpDepartureDate] = useState('');
-    const [tmpDestinationDate, setTmpDestinationDate] = useState('');
+    // const [tmpDepartureDate, setTmpDepartureDate] = useState('');
+    // const [tmpDestinationDate, setTmpDestinationDate] = useState('');
 
     useEffect(() => {
         async function storeAccessToken() {
@@ -48,20 +53,24 @@ const FlightSearch = () => {
             let replaced = result
                 .toISOString()
                 .split('T')[0];
-            setTmpDepartureDate(replaced);
+            setDepartureDateText(replaced);
         }
-    },[departureDate, tmpDepartureDate])
+    },[departureDate, setDepartureDateText,departureDateText])
 
     useEffect(() => {
         let result = new Date();
         result = destinationDate;
-        if(moment(result, 'yyyy-MM-dd', true).isValid()) {
-            let replaced = result
-                .toISOString()
-                .split('T')[0];
-                setTmpDestinationDate(replaced);
+
+        if(moment(result, 'yyyy-MM-dd', true).isValid() &&
+            dayjs(departureDate).isBefore(dayjs(result))) {
+                let replaced = result
+                    .toISOString()
+                    .split('T')[0];
+                setDestinationDateText(replaced);
+        } else {
+            setDestinationDateText('');
         }
-    },[destinationDate, tmpDestinationDate])
+    },[destinationDate, setDestinationDateText, departureDate])
     
     const [departureSuggestions, setDepartureSuggestions] = useState([]);
     const getDepartureSuggestions = async () => {
@@ -101,6 +110,7 @@ const FlightSearch = () => {
                                 loadOptions={async() => await getDepartureSuggestions()}
                                 onInputChange={(e) => originSearch(e)}
                                 isClearable={true}
+                                onChange={(data) => setOriginIATA(data.value)}
                             />
                         </div>    
                         <div id="departureDate" className="connected formatComponents">
@@ -124,6 +134,7 @@ const FlightSearch = () => {
                                 loadOptions={async() => await getDestinationSuggestions()}
                                 onInputChange={(e) => destinationSearch(e)}
                                 isClearable={true}
+                                onChange={(data) => setDestinationIATA(data.value)}
                             />
                         </div>
                         <div className="connected formatComponents">
