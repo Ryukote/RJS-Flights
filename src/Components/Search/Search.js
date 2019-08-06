@@ -9,21 +9,16 @@ const getFlights = async(data) => {
 }
 
 const Search = () => {
-    const [
-        [originText],
-        [destinationText],
-        [originIATA],
-        [destinationIATA],
-        [destinationDate],
-        [departureDate],
-        [departureDateText],
-        [destinationDateText],
-        [adults],
-        [children],
-        [infants],
-        [seniors],
-        [travelClass]
-    ] = useContext(FlightContext);
+    const {
+        originText,
+        destinationText,
+        originIATA,
+        destinationIATA,
+        destinationDate,
+        departureDateText,
+        destinationDateText,
+        adults
+    } = useContext(FlightContext);
 
     let data = {
         originText,
@@ -34,17 +29,13 @@ const Search = () => {
         departureDateText,
         destinationDateText,
         adults,
-        children,
-        infants,
-        seniors,
-        travelClass
     }
 
     return(
-        <div className="full">
-            <Container className="full">
-                <Row className="centerButton">
-                    <Col className="full">
+        <div>
+            <Container>
+                <Row>
+                    <Col>
                         <Button onClick={async() => await getFlights(data)}>
                             Get flights
                         </Button>

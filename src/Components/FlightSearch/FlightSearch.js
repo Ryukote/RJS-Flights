@@ -23,19 +23,16 @@ import FaPlane from 'react-icons/lib/fa/plane';
 import FaCalendar from 'react-icons/lib/fa/calendar';
 
 const FlightSearch = () => {
-    const [
-        [originText, originSearch],
-        [destinationText, destinationSearch],
-        [originIATA, setOriginIATA],
-        [destinationIATA, setDestinationIATA],
-        [destinationDate, setDestinationDate],
-        [departureDate, setDepartureDate],
-        [departureDateText, setDepartureDateText],
-        [destinationDateText, setDestinationDateText]
-    ] = useContext(FlightContext);
-
-    // const [tmpDepartureDate, setTmpDepartureDate] = useState('');
-    // const [tmpDestinationDate, setTmpDestinationDate] = useState('');
+    const {
+        departureDate,
+        departureDateText,
+        destinationDate,
+        destinationDateText,
+        originText,
+        destinationText,
+        originIATA,
+        destinationIATA
+    } = useContext(FlightContext);
 
     useEffect(() => {
         async function storeAccessToken() {
@@ -47,34 +44,34 @@ const FlightSearch = () => {
 
     useEffect(() => {
         let result = new Date();
-        result = departureDate;
+        result = departureDate[0];
         
         if(moment(result, 'yyyy-MM-dd', true).isValid()) {
             let replaced = result
                 .toISOString()
                 .split('T')[0];
-            setDepartureDateText(replaced);
+                departureDateText[1](replaced);
         }
-    },[departureDate, setDepartureDateText,departureDateText])
+    },[departureDate, departureDateText])
 
     useEffect(() => {
         let result = new Date();
-        result = destinationDate;
+        result = destinationDate.value;
 
         if(moment(result, 'yyyy-MM-dd', true).isValid() &&
-            dayjs(departureDate).isBefore(dayjs(result))) {
+            dayjs(departureDate[0]).isBefore(dayjs(result))) {
                 let replaced = result
                     .toISOString()
                     .split('T')[0];
-                setDestinationDateText(replaced);
+                    destinationDateText[1](replaced);
         } else {
-            setDestinationDateText('');
+            destinationDateText[1]('');
         }
-    },[destinationDate, setDestinationDateText, departureDate])
+    },[destinationDate, destinationDateText, departureDate])
     
     const [departureSuggestions, setDepartureSuggestions] = useState([]);
     const getDepartureSuggestions = async () => {
-        return await getIATACode(originText)
+        return await getIATACode(originText[0])
             .then(result => {
                 setDepartureSuggestions(result);
                 return departureSuggestions;
@@ -86,7 +83,7 @@ const FlightSearch = () => {
 
     const [destinationSuggestions, setDestinationSuggestions] = useState([]);
     const getDestinationSuggestions = async () => {
-        return await getIATACode(destinationText)
+        return await getIATACode(destinationText[0])
             .then(result => {
                 setDestinationSuggestions(result);
                 return destinationSuggestions;
@@ -100,25 +97,27 @@ const FlightSearch = () => {
         <div id="flightHeader">
             <Container>
                 <Row>
-                    <Col id="departure" xs={12} md={6} lg={6} className="leftColumnStyle">
+                    <Col id="departure" xs={12} md={6} lg={6}                       className="leftColumnStyle">
                         <div className="connected formatComponents">
                             <FaPlane size="28" className="connected"/>
                             <AsyncSelect
                                 className="selectStyle connected"
                                 placeholder={originPlaceholder}
                                 options={departureSuggestions}
-                                loadOptions={async() => await getDepartureSuggestions()}
-                                onInputChange={(e) => originSearch(e)}
+                                loadOptions={async() => 
+                                    await getDepartureSuggestions()
+                                }
+                                onInputChange={(e) => originText[1](e)}
                                 isClearable={true}
-                                onChange={(data) => setOriginIATA(data.value)}
+                                onChange={(data) => originIATA[1](data.value)}
                             />
                         </div>    
                         <div id="departureDate" className="connected formatComponents">
                             <FaCalendar className="connected" size="20"/>
                             <DayPicker
                                 className="connected"
-                                onDayChange={(date) => setDepartureDate(date)}
-                                selectedDays={departureDate}
+                                onDayChange={(date) => departureDate[1](date)}
+                                selectedDays={departureDate[0]}
                                 placeholder={departureDatePlaceholder}
                             />
                         </div>
@@ -131,18 +130,20 @@ const FlightSearch = () => {
                                 className="selectStyle connected"
                                 placeholder={destinationPlaceholder}
                                 options={destinationSuggestions}
-                                loadOptions={async() => await getDestinationSuggestions()}
-                                onInputChange={(e) => destinationSearch(e)}
+                                loadOptions={async() => 
+                                    await getDestinationSuggestions()
+                                }
+                                onInputChange={(e) => destinationText[1](e)}
                                 isClearable={true}
-                                onChange={(data) => setDestinationIATA(data.value)}
+                                onChange={(data) => destinationIATA[1](data.value)}
                             />
                         </div>
                         <div className="connected formatComponents">
                             <FaCalendar className="connected" size="20"/>
                             <DayPicker
                                 className="connected"
-                                onDayChange={(date) => setDestinationDate(date)}
-                                selectedDays={destinationDate}
+                                onDayChange={(date) => destinationDate[1](date)}
+                                selectedDays={destinationDate[0]}
                                 placeholder={destinationDatePlaceholder}
                             />
                         </div>
