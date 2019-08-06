@@ -52,32 +52,30 @@ export const getIATACode = async (city) => {
 
 export const getFlightOffer = async (data) => {
     let url = `${process.env.REACT_APP_OFFERS}?`
-        + `origin=${data.originIATA}&`
-        + `destination=${data.destinationIATA}&`
-        + `departureDate=${data.departureDateText}`;
+        + `origin=${data.originIATA[0]}&`
+        + `destination=${data.destinationIATA[0]}&`
+        + `departureDate=${data.departureDateText[0]}`;
+
+    console.log("Departure date:" + data.departureDateText[0]);
 
     (moment(data.destinationDateText, "yyyy-MM-dd", true).isValid()) 
-        ? url += `&returnDate=${data.destinationDateText}`
+        ? url += `&returnDate=${data.destinationDateText[0]}`
         : url += '';
 
     (data.adults > 1) 
-        ? url += `&adults=${data.adults}` 
+        ? url += `&adults=${data.adults[0]}` 
         : url += '';
     
     (data.children > 0) 
-        ? url += `&children=${data.children}` 
+        ? url += `&children=${data.children[0]}` 
         : url += '';
 
     (data.infants > 0) 
-        ? url += `&infants=${data.infants}` 
+        ? url += `&infants=${data.infants[0]}` 
         : url += '';
 
     (data.seniors > 0) 
-        ? url += `&seniors=${data.seniors}` 
-        : url += '';
-
-    (data.travelClass !== '') 
-        ? url += `&travelClass=${data.travelClass}` 
+        ? url += `&seniors=${data.seniors[0]}` 
         : url += '';
 
     url += `&max=${numberOfFlights}`;
