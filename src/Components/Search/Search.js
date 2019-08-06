@@ -2,9 +2,24 @@ import React, { useContext, useState } from 'react';
 import { Button } from 'reactstrap';
 import { getFlightOffer } from '../../Utilities/AmadeusAPI';
 import { FlightContext } from '../Contexts/FlightContext';
-import { Row, Col, Container } from 'reactstrap';
+import { Row, Col, Container, Spinner } from 'reactstrap';
 import BaseData from '../BaseData/BaseData';
 import DetailData from '../DetailData/DetailData';
+import './Search.css';
+
+
+const GetFlights = async(data) => {
+    // toggleSpinner(true);
+    // return(
+    //     <div>
+    //         <Spinner 
+    //             type="grow" 
+    //             color="info" 
+    //             className={spinnerValue ? 'hidden' : ''}
+    //         />
+    //     </div>
+    // );
+}
 
 const Search = () => {
     const {
@@ -29,36 +44,47 @@ const Search = () => {
         adults,
     }
 
+    const [spinnerValue, toggleSpinner] = useState(true);
     const [flights, setFlights] = useState({});
     return(
         <div>
             <Container>
                 <Row>
                     <Col>
-                        <Button onClick={async() => await getFlights(data)}>
+                        <Button className="fixedCenter" onClick={async() => {
+                            toggleSpinner(!spinnerValue);
+                            await GetFlights(data);
+                        }}>
                             Get flights
                         </Button>
                     </Col>
                 </Row>
             </Container>
 
+            <div className={spinnerValue ? 'hidden' : 'absoluteCenter' }>
+                <Spinner 
+                    type="grow" 
+                    color="info"
+                />
+            </div>
+
             {
-                (flights !== undefined && flights.length > 0)
-                    ? 
-                        Object(flights).map((value, key) => {
-                            let data = value.offerItems;
-                            let baseRender = Object(data).map((base, dataKey) => {
-                                console.log(base);
-                                return <BaseData base={base}/>
-                            })
+                // (flights !== undefined && flights.length > 0)
+                //     ? 
+                //         Object(flights).map((value, key) => {
+                //             let data = value.offerItems;
+                //             let baseRender = Object(data).map((base, dataKey) => {
+                //                 console.log(base);
+                //                 return <BaseData base={base}/>
+                //             })
 
-                            let detailRender = Object(data).map((details, key) => {
-                                return <DetailData details={details}/>
-                            })
+                //             let detailRender = Object(data).map((details, key) => {
+                //                 return <DetailData details={details}/>
+                //             })
 
-                            return baseRender + detailRender;
-                        })
-                    : ''
+                //             return baseRender + detailRender;
+                //         })
+                //     : ''
             }
         </div>
     );
