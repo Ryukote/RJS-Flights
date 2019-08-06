@@ -7,21 +7,16 @@ import BaseData from '../BaseData/BaseData';
 import DetailData from '../DetailData/DetailData';
 
 const Search = () => {
-    const [
-        [originText],
-        [destinationText],
-        [originIATA],
-        [destinationIATA],
-        [destinationDate],
-        [departureDate],
-        [departureDateText],
-        [destinationDateText],
-        [adults],
-        [children],
-        [infants],
-        [seniors],
-        [travelClass]
-    ] = useContext(FlightContext);
+    const {
+        originText,
+        destinationText,
+        originIATA,
+        destinationIATA,
+        destinationDate,
+        departureDateText,
+        destinationDateText,
+        adults
+    } = useContext(FlightContext);
 
     let data = {
         originText,
@@ -32,20 +27,15 @@ const Search = () => {
         departureDateText,
         destinationDateText,
         adults,
-        children,
-        infants,
-        seniors,
-        travelClass
     }
 
     const [flights, setFlights] = useState({});
     return(
-        <div className="full">
-            <Container className="full">
-                <Row className="centerButton">
-                    <Col className="full">
-                        <Button onClick={async() => 
-                            setFlights(await getFlightOffer(data))}>
+        <div>
+            <Container>
+                <Row>
+                    <Col>
+                        <Button onClick={async() => await getFlights(data)}>
                             Get flights
                         </Button>
                     </Col>

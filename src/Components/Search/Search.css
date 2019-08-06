@@ -1,12 +1,13 @@
 .full {
-    width: 100vw;
+    /* width: 100vw !important; */
     /* margin-top: 10px; */
 }
 
 .centerButton {
-    width: inherit !important;
+    
+    /* width: inherit !important; */
     /* text-align: center !important; */
     /* display: inline-block !important; */
-    margin-top: 100px !important;
+    /* margin-top: 100px !important; */
     /* margin: 0 auto; */
 }
