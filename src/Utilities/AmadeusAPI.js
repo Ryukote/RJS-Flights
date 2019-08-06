@@ -51,8 +51,9 @@ export const getIATACode = async (city) => {
 }
 
 export const getFlightOffer = async (data) => {
+    console.log(data.originIATA[0]);
     let url = `${process.env.REACT_APP_OFFERS}?`
-        + `origin=${data.originIATA[0]}&`
+        + `origin=${data.originIATA[0].value}&`
         + `destination=${data.destinationIATA[0]}&`
         + `departureDate=${data.departureDateText[0]}`;
 

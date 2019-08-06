@@ -3,22 +3,12 @@ import { Button } from 'reactstrap';
 import { getFlightOffer } from '../../Utilities/AmadeusAPI';
 import { FlightContext } from '../Contexts/FlightContext';
 import { Row, Col, Container, Spinner } from 'reactstrap';
-import BaseData from '../BaseData/BaseData';
-import DetailData from '../DetailData/DetailData';
 import './Search.css';
 
 
 const GetFlights = async(data) => {
-    // toggleSpinner(true);
-    // return(
-    //     <div>
-    //         <Spinner 
-    //             type="grow" 
-    //             color="info" 
-    //             className={spinnerValue ? 'hidden' : ''}
-    //         />
-    //     </div>
-    // );
+    let result = await getFlightOffer(data);
+    // toggleSpinner(false);
 }
 
 const Search = () => {
@@ -52,8 +42,9 @@ const Search = () => {
                 <Row>
                     <Col>
                         <Button className="fixedCenter" onClick={async() => {
-                            toggleSpinner(!spinnerValue);
+                            toggleSpinner(false);
                             await GetFlights(data);
+                            toggleSpinner(true);
                         }}>
                             Get flights
                         </Button>
