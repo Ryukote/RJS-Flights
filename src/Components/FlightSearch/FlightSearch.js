@@ -102,7 +102,7 @@ const FlightSearch = () => {
         <div id="flightHeader">
             <Container>
                 <Row>
-                    <Col id="departure" xs={12} md={6} lg={6}                       className="leftColumnStyle">
+                    <Col id="departure" xs={12} md={6} lg={6} className="leftColumnStyle">
                         <div className="connected formatComponents">
                             <FaPlane size="28" className="connected"/>
                             <AsyncSelect

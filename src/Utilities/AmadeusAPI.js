@@ -51,13 +51,10 @@ export const getIATACode = async (city) => {
 }
 
 export const getFlightOffer = async (data) => {
-    console.log(data.originIATA[0]);
     let url = `${process.env.REACT_APP_OFFERS}?`
         + `origin=${data.originIATA[0].value}&`
         + `destination=${data.destinationIATA[0]}&`
         + `departureDate=${data.departureDateText[0]}`;
-
-    console.log("Departure date:" + data.departureDateText[0]);
 
     (moment(data.destinationDateText, "yyyy-MM-dd", true).isValid()) 
         ? url += `&returnDate=${data.destinationDateText[0]}`
@@ -90,6 +87,6 @@ export const getFlightOffer = async (data) => {
             headers: headers
         }
     )
-    console.log(response.data);
+
     return response.data.data;
 }
