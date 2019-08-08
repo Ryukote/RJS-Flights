@@ -4,6 +4,7 @@ import DayPicker from 'react-day-picker/DayPickerInput';
 import { Container, Row, Col } from 'reactstrap';
 import moment from 'moment';
 import dayjs from 'dayjs';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 import { authenticate, getIATACode } from '../../Utilities/AmadeusAPI';
 
@@ -93,23 +94,25 @@ const FlightSearch = () => {
             });
     }
 
+    const searchOriginIATA = AwesomeDebouncePromise(async() => await getDepartureSuggestions(), 30);
+
+    const searchDestinationIATA = AwesomeDebouncePromise(async() =>  await getDestinationSuggestions(), 30);
+
     return(
         <div id="flightHeader">
             <Container>
                 <Row>
-                    <Col id="departure" xs={12} md={6} lg={6}                       className="leftColumnStyle">
+                    <Col id="departure" xs={12} md={6} lg={6} className="leftColumnStyle">
                         <div className="connected formatComponents">
                             <FaPlane size="28" className="connected"/>
                             <AsyncSelect
                                 className="selectStyle connected"
                                 placeholder={originPlaceholder}
                                 options={departureSuggestions}
-                                loadOptions={async() => 
-                                    await getDepartureSuggestions()
-                                }
+                                loadOptions={async() => await searchOriginIATA()}
                                 onInputChange={(e) => originText[1](e)}
                                 isClearable={true}
-                                onChange={(data) => originIATA[1](data.value)}
+                                onChange={(data) => originIATA[1](data)}
                             />
                         </div>    
                         <div id="departureDate" className="connected formatComponents">
@@ -130,9 +133,7 @@ const FlightSearch = () => {
                                 className="selectStyle connected"
                                 placeholder={destinationPlaceholder}
                                 options={destinationSuggestions}
-                                loadOptions={async() => 
-                                    await getDestinationSuggestions()
-                                }
+                                loadOptions={async() => await searchDestinationIATA()}
                                 onInputChange={(e) => destinationText[1](e)}
                                 isClearable={true}
                                 onChange={(data) => destinationIATA[1](data.value)}

@@ -1,10 +1,16 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { getFlightOffer } from '../../Utilities/AmadeusAPI';
 import { FlightContext } from '../Contexts/FlightContext';
-import { Row, Col, Container } from 'reactstrap';
-import BaseData from '../BaseData/BaseData';
-import DetailData from '../DetailData/DetailData';
+import { Row, Col, Container, Spinner } from 'reactstrap';
+
+import FlightPanel from '../FlightPanel/FlightPanel';
+
+import './Search.css';
+
+const GetFlights = async(data) => {
+    return await getFlightOffer(data);
+}
 
 const Search = () => {
     const {
@@ -30,36 +36,65 @@ const Search = () => {
     }
 
     const [flights, setFlights] = useState({});
+    const [isFlightsReady, setFlightsReady] = useState(false);
+    const [spinnerValue, toggleSpinner] = useState(true);
+    useEffect(() => {
+        if(Object.keys(flights).length > 0) {
+            setFlightsReady(true);
+        }
+    }, [flights]);
+    
     return(
         <div>
+            <div>
             <Container>
                 <Row>
                     <Col>
-                        <Button onClick={async() => await getFlights(data)}>
+                        <Button className="fixedCenter" onClick={async() => {
+                            toggleSpinner(false);                            
+                            setFlights(await GetFlights(data));
+                            toggleSpinner(true);
+                        }}>
                             Get flights
                         </Button>
                     </Col>
                 </Row>
+                <br/>
+                <br/>
             </Container>
 
-            {
-                (flights !== undefined && flights.length > 0)
-                    ? 
-                        Object(flights).map((value, key) => {
-                            let data = value.offerItems;
-                            let baseRender = Object(data).map((base, dataKey) => {
-                                console.log(base);
-                                return <BaseData base={base}/>
-                            })
+            <div className={spinnerValue ? 'hidden' : 'absoluteCenter' }>
+                <Spinner 
+                    type="grow" 
+                    color="info"
+                />
+            </div>
+        </div>
 
-                            let detailRender = Object(data).map((details, key) => {
-                                return <DetailData details={details}/>
-                            })
-
-                            return baseRender + detailRender;
-                        })
-                    : ''
-            }
+<div id="result">
+{
+    isFlightsReady
+        ?
+            <Container>
+                {
+                    Object(flights).map((value, key) => {
+                        return (
+                            <Row key={key}>
+                                <Col 
+                                    sm={{size: 10, offset: 1}}
+                                    md={{size: 10, offset: 1}}
+                                    lg={{size: 10, offset: 1}}
+                                >
+                                    <FlightPanel value={value} key={key}/>
+                                </Col>
+                            </Row>
+                        );
+                    })
+                }
+            </Container>
+        : ""
+}
+</div>
         </div>
     );
 }

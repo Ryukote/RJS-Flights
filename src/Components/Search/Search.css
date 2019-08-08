@@ -11,3 +11,28 @@
     /* margin-top: 100px !important; */
     /* margin: 0 auto; */
 }
+
+.hidden {
+    visibility: hidden;
+}
+
+.fixedCenter {
+    position: absolute; 
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    margin-top: 15px;
+    width: 100px;
+}
+
+.absoluteCenter {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 34px;
+    height: 34px;
+}
