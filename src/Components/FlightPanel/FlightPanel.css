@@ -1,3 +1,11 @@
+.mainPanel {
+    background-color: darkgray !important;
+    color: black !important;
+    
+}
+
 .detailPanel {
-    background-color: cadetblue !important;
+    background-color: white !important;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

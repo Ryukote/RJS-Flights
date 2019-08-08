@@ -30,7 +30,6 @@ const useStyles = makeStyles(theme => ({
 const FlightPanel = (props) => {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
-    let key = props.key;
     let offer = props.value.offerItems[0];
     let segments = props.value.offerItems[0].services[0].segments;
 
@@ -41,23 +40,22 @@ const FlightPanel = (props) => {
     return (
         <div className={classes.root}>
             <ExpansionPanel
-                expanded={expanded === `panel${key}`}
-                onChange={handleChange(`panel${key}`)}
+                expanded={expanded}
+                onChange={handleChange(!expanded)}
             >
                 <ExpansionPanelSummary
+                    className="mainPanel"
                     expandIcon={<ExpandMoreIcon/>}
-                    aria-controls={`panel${key}bh-content`}
-                    id={`panel${key}bh-header`}
+                    key={props.keyOf}
+                    aria-controls={`panel${props.keyOf}bh-content`}
+                    id={`panel${props.keyOf}bh-header`}
                 >
-                    <Typography className={classes.heading}>
+                    <Typography key={props.keyOf} className={classes.heading}>
                         {`Flight offer ${props.value.id}`}
                     </Typography>
                 </ExpansionPanelSummary>
 
-                <br/>
-
-                <ExpansionPanelDetails className="detailPanel">
-                    <Typography>
+                <ExpansionPanelDetails className="detailPanel" key={props.keyOf}>
                         <Container>
                             <Row>
                                 <Col>
@@ -74,33 +72,44 @@ const FlightPanel = (props) => {
                                     return (
                                         <div>
                                             <br/>
-                                        <Row key={segmentKey}>
-                                            <Col>
-                                                {`Aircraft: ${value.flightSegment.aircraft.code}`}
-                                            </Col>
+                                            <Row key={segmentKey}>
+                                                <Col>
+                                                    {`Aircraft: ${value.flightSegment.aircraft.code}`}
+                                                </Col>
 
-                                            <Col>
-                                                {`Departure airport: ${value.flightSegment.departure.iataCode}`}
-                                            </Col>
+                                                <Col>
+                                                    {"Departure airport:"} 
+                                                    <br/>
+                                                    {`${value.flightSegment.departure.iataCode}`}
+                                                </Col>
 
-                                            <Col>
-                                                {`Departure at: ${value.flightSegment.departure.at}`}
-                                            </Col>
+                                                <Col>
+                                                    {"Departure at:"}
+                                                    <br/>
+                                                    {`${value.flightSegment.departure.at.split('T')[0]}`}
+                                                    <br/>
+                                                    {`${value.flightSegment.departure.at.split('T')[1]}`}
+                                                </Col>
 
-                                            <Col>
-                                                {`Arrival airport: ${value.flightSegment.arrival.iataCode}`}
-                                            </Col>
+                                                <Col>
+                                                    {"Arrival airport:"} 
+                                                    <br/>
+                                                    {`${value.flightSegment.arrival.iataCode}`}
+                                                </Col>
 
-                                            <Col>
-                                                {`Arrival at: ${value.flightSegment.arrival.at}`}
-                                            </Col>
-                                        </Row>
+                                                <Col>
+                                                    {"Arrival at:"}
+                                                    <br/>
+                                                    {`${value.flightSegment.arrival.at.split('T')[0]}`}
+                                                    <br/>
+                                                    {`${value.flightSegment.arrival.at.split('T')[1]}`}
+                                                </Col>
+                                            </Row>
                                         </div>
                                     );
                                 })
                             }
                         </Container>
-                    </Typography>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
         </div>

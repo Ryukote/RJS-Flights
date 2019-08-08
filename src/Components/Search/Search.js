@@ -3,9 +3,15 @@ import { Button } from 'reactstrap';
 import { getFlightOffer } from '../../Utilities/AmadeusAPI';
 import { FlightContext } from '../Contexts/FlightContext';
 import { Row, Col, Container, Spinner } from 'reactstrap';
+import { Modal as BootstrapModal, 
+    ModalHeader as BootstrapModalHeader,
+    ModalBody as BootstrapModalBody,
+    ModalFooter as BootstrapModalFooter
+} from 'reactstrap';
 
 import FlightPanel from '../FlightPanel/FlightPanel';
 
+import { departureValidationMessage, destinationValidationMessage } from '../../Constants/flightSearchConstants';
 import './Search.css';
 
 const GetFlights = async(data) => {
@@ -19,6 +25,7 @@ const Search = () => {
         originIATA,
         destinationIATA,
         destinationDate,
+        departureDate,
         departureDateText,
         destinationDateText,
         adults
@@ -30,6 +37,7 @@ const Search = () => {
         originIATA,
         destinationIATA,
         destinationDate,
+        departureDate,
         departureDateText,
         destinationDateText,
         adults,
@@ -43,58 +51,96 @@ const Search = () => {
             setFlightsReady(true);
         }
     }, [flights]);
-    
+
+    const [toggle, setToggle] = useState(false);
+    const [validationMessage, setValidationMessage] = useState('');
+    const validation = () => {
+        if(originIATA[0] === '' || originIATA[0] === null) {
+            setValidationMessage(departureValidationMessage)
+            setToggle(!toggle);
+            return 0;
+        }
+
+        else if(destinationIATA[0] === '' || destinationIATA[0] === null) {
+            setValidationMessage(destinationValidationMessage)
+            setToggle(!toggle);
+            return 0;
+        }
+
+        return 1;
+    }
+
     return(
         <div>
             <div>
-            <Container>
-                <Row>
-                    <Col>
-                        <Button className="fixedCenter" onClick={async() => {
-                            toggleSpinner(false);                            
-                            setFlights(await GetFlights(data));
-                            toggleSpinner(true);
-                        }}>
-                            Get flights
-                        </Button>
-                    </Col>
-                </Row>
-                <br/>
-                <br/>
-            </Container>
+                <Container>
+                    <Row>
+                        <Col>
+                            <Button className="fixedCenter" onClick={async() => {
+                                if(validation() === 1) {
+                                    toggleSpinner(false);                            
+                                    setFlights(await GetFlights(data));
+                                    toggleSpinner(true);
+                                }
+                            }}>
+                                Get flights
+                            </Button>
 
-            <div className={spinnerValue ? 'hidden' : 'absoluteCenter' }>
-                <Spinner 
-                    type="grow" 
-                    color="info"
-                />
+                            <BootstrapModal isOpen={toggle} toggle={setToggle}>
+                                <BootstrapModalHeader toggle={setToggle}>
+                                    Non valid data
+                                </BootstrapModalHeader>
+
+                                <BootstrapModalBody>
+                                    {validationMessage}
+                                </BootstrapModalBody>
+
+                                <BootstrapModalFooter>
+                                    <Button color="primary" onClick={() => setToggle(!toggle)}>
+                                        Ok
+                                    </Button>
+                                </BootstrapModalFooter>
+                            </BootstrapModal>
+                        </Col>
+                    </Row>
+                    <br/>
+                    <br/>
+                </Container>
+
+                <div className={spinnerValue ? 'hidden' : 'absoluteCenter' }>
+                    <Spinner 
+                        type="grow" 
+                        color="info"
+                    />
+                </div>
             </div>
-        </div>
 
-<div id="result">
-{
-    isFlightsReady
-        ?
-            <Container>
+            <div id="result">
                 {
-                    Object(flights).map((value, key) => {
-                        return (
-                            <Row key={key}>
-                                <Col 
-                                    sm={{size: 10, offset: 1}}
-                                    md={{size: 10, offset: 1}}
-                                    lg={{size: 10, offset: 1}}
-                                >
-                                    <FlightPanel value={value} key={key}/>
-                                </Col>
-                            </Row>
-                        );
-                    })
+                    isFlightsReady
+                    ?
+                        <Container>
+                            {
+                                Object(flights).map((value, key) => {
+                                    let keyOf = key;
+
+                                    return (
+                                        <Row key={key}>
+                                            <Col 
+                                                sm={{size: 10, offset: 1}}
+                                                md={{size: 10, offset: 1}}
+                                                lg={{size: 10, offset: 1}}
+                                            >
+                                                <FlightPanel value={value} keyOf={keyOf}/>
+                                            </Col>
+                                        </Row>
+                                    );
+                                })
+                            }
+                        </Container>
+                    : ""
                 }
-            </Container>
-        : ""
-}
-</div>
+            </div>
         </div>
     );
 }
