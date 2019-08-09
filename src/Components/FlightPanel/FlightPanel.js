@@ -51,7 +51,7 @@ const FlightPanel = (props) => {
                     id={`panel${props.keyOf}bh-header`}
                 >
                     <Typography key={props.keyOf} className={classes.heading}>
-                        {`Flight offer ${props.value.id}`}
+                        {`${props.value.id}`}
                     </Typography>
                 </ExpansionPanelSummary>
 
@@ -74,7 +74,8 @@ const FlightPanel = (props) => {
                                             <br/>
                                             <Row key={segmentKey}>
                                                 <Col>
-                                                    {`Aircraft: ${value.flightSegment.aircraft.code}`}
+                                                    {"Duration:"}
+                                                    <br/>{value.flightSegment.duration.split("T")[1]}
                                                 </Col>
 
                                                 <Col>

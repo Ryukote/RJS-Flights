@@ -94,9 +94,9 @@ const FlightSearch = () => {
             });
     }
 
-    const searchOriginIATA = AwesomeDebouncePromise(async() => await getDepartureSuggestions(), 30);
+    const searchOriginIATA = AwesomeDebouncePromise(async() => await getDepartureSuggestions(), 15);
 
-    const searchDestinationIATA = AwesomeDebouncePromise(async() =>  await getDestinationSuggestions(), 30);
+    const searchDestinationIATA = AwesomeDebouncePromise(async() =>  await getDestinationSuggestions(), 15);
 
     return(
         <div id="flightHeader">
@@ -123,6 +123,9 @@ const FlightSearch = () => {
                                 selectedDays={departureDate[0]}
                                 placeholder={departureDatePlaceholder}
                             />
+                        </div>
+                        <div>
+                            optional
                         </div>
                     </Col>
 
